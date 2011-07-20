@@ -29,7 +29,7 @@ float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
 
-	float dt = time * 0.0001;
+	float dt = time * 0.001;
 
 	float water = tex2D(WaterSampler, texCoord).r;
 	float water_add = tex2D(WaterSourceSampler, texCoord).r;

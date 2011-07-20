@@ -7,8 +7,26 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\VTFDisplacement.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\VTFDisplacement.xnb</Output>
       <Time>2011-07-19T00:00:12.9254723+02:00</Time>
+    </Item>
+    <Item>
+      <Source>WaterCalc.fx</Source>
+      <Name>WaterCalc</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\WaterCalc.xnb</Output>
+      <Time>2011-07-21T00:47:13.2873322+02:00</Time>
+    </Item>
+    <Item>
+      <Source>DebugEffect.fx</Source>
+      <Name>DebugEffect</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\DebugEffect.xnb</Output>
+      <Time>2011-07-19T21:50:14.3959488+02:00</Time>
     </Item>
     <Item>
       <Source>Textures\grass.dds</Source>
@@ -16,7 +34,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\grass.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\grass.xnb</Output>
       <Time>2007-09-18T11:20:10+02:00</Time>
     </Item>
     <Item>
@@ -25,7 +43,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\height1.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\height1.xnb</Output>
       <Time>2007-08-28T13:46:04+02:00</Time>
     </Item>
     <Item>
@@ -34,7 +52,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\rock.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\rock.xnb</Output>
       <Time>2007-09-18T11:20:40+02:00</Time>
     </Item>
     <Item>
@@ -43,7 +61,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\sand.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\sand.xnb</Output>
       <Time>2007-09-18T11:20:22+02:00</Time>
     </Item>
     <Item>
@@ -52,7 +70,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\snow.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\snow.xnb</Output>
       <Time>2007-09-18T11:20:40+02:00</Time>
     </Item>
     <Item>
@@ -61,7 +79,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\heightmap2.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\heightmap2.xnb</Output>
       <Time>2011-07-19T00:35:40.5269023+02:00</Time>
     </Item>
     <Item>
@@ -70,35 +88,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\water.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\water.xnb</Output>
       <Time>2011-07-19T00:35:19.3386904+02:00</Time>
-    </Item>
-    <Item>
-      <Source>WaterCalc.fx</Source>
-      <Name>WaterCalc</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\WaterCalc.xnb</Output>
-      <Time>2011-07-21T00:10:30.0423138+02:00</Time>
-    </Item>
-    <Item>
-      <Source>MyArial.spritefont</Source>
-      <Name>MyArial</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\MyArial.xnb</Output>
-      <Time>2011-07-13T21:10:32.9626831+02:00</Time>
-    </Item>
-    <Item>
-      <Source>DebugEffect.fx</Source>
-      <Name>DebugEffect</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\DebugEffect.xnb</Output>
-      <Time>2011-07-19T21:50:14.3959488+02:00</Time>
     </Item>
     <Item>
       <Source>Textures\sun.png</Source>
@@ -106,8 +97,17 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\sun.xnb</Output>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\sun.xnb</Output>
       <Time>2011-07-19T20:41:13.2910911+02:00</Time>
+    </Item>
+    <Item>
+      <Source>MyArial.spritefont</Source>
+      <Name>MyArial</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\MyArial.xnb</Output>
+      <Time>2011-07-13T21:10:32.9626831+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
@@ -115,10 +115,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1Content\</RootDirectory>
-      <LoggerRootDirectory>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\</LoggerRootDirectory>
-      <IntermediateDirectory>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1Content\</RootDirectory>
+      <LoggerRootDirectory>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\</LoggerRootDirectory>
+      <IntermediateDirectory>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>D:\Programming\MyCode\WaterErosion\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

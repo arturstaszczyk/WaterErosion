@@ -274,16 +274,14 @@ namespace Chapter1
                 // PASS 3 WATER
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["WaterCalculation"];
 
-                graphics.GraphicsDevice.SetRenderTargets(rtb[act_water_rt]);
-                graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
+                graphics.GraphicsDevice.SetRenderTarget(water_rt[act_water_rt]);
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(added_water_rt, new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
                 sprite.End();
 
-                graphics.GraphicsDevice.SetRenderTargets(null);
+                graphics.GraphicsDevice.SetRenderTarget(null);
 
                 waterTexture = (Texture2D)water_rt[act_water_rt];
-                groundTexture = (Texture2D)ground_rt[act_water_rt];
             }
 
             act_water_rt = 1 - act_water_rt;

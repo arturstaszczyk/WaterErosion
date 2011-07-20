@@ -1,30 +1,13 @@
 float time;
-
 float pixel_w = 1.0 / 512.0;
 float pixel_h = 1.0 / 512.0;
 
 sampler WaterSampler : register(s0);
 sampler WaterSourceSampler : register(s1);
-sampler GroundSampler : register(s2)
-{
-	MipFilter = Point;
-    MinFilter = Point;
-    MagFilter = Point;
-};
-sampler FluxSampler : register(s3)
-{
-	MipFilter = Point;
-    MinFilter = Point;
-    MagFilter = Point;
-};
+sampler GroundSampler : register(s2);
+sampler FluxSampler : register(s3);
 
-struct PixelShaderOutput  
-{  
-	float4 Water : COLOR0;  
-    float4 Ground : COLOR1;
-	float4 WaterRemoved : COLOR2;
-};  
-
+//=================================================================================
 float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
@@ -38,6 +21,7 @@ float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 	return ret;
 }
 
+//=================================================================================
 float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
@@ -45,24 +29,22 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 	// to seconds
 	float dt = time * 0.001;
 
-	float height_scale = 1;
-
-	float water = tex2D(WaterSampler, texCoord).r * height_scale;  
-	float ground = tex2D(GroundSampler, texCoord).r * height_scale;
+	float water = tex2D(WaterSampler, texCoord).r;  
+	float ground = tex2D(GroundSampler, texCoord).r;
 	float height = (water + ground);
 	float4 prev_flux = tex2D(FluxSampler, texCoord);
 	
 	// water around
-	float w_up = tex2D(WaterSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r * height_scale;  
-	float w_down = tex2D(WaterSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r * height_scale;
-	float w_right = tex2D(WaterSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r * height_scale;
-	float w_left = tex2D(WaterSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r * height_scale;
+	float w_up = tex2D(WaterSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r;  
+	float w_down = tex2D(WaterSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r;
+	float w_right = tex2D(WaterSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r;
+	float w_left = tex2D(WaterSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r;
 
 	// ground around
-	float g_up = tex2D(GroundSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r * height_scale;  
-	float g_down = tex2D(GroundSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r * height_scale;
-	float g_right = tex2D(GroundSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r * height_scale;
-	float g_left = tex2D(GroundSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r * height_scale;
+	float g_up = tex2D(GroundSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r;  
+	float g_down = tex2D(GroundSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r;
+	float g_right = tex2D(GroundSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r;
+	float g_left = tex2D(GroundSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r;
 
 	float4 height_around;
 	height_around.x = (w_left + g_left);
@@ -84,13 +66,12 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 
 	float K = min(1, (water) / ((flux.x + flux.y + flux.z + flux.w)));
 	flux = K * flux;
-	
-	//flux /= 100;
 
     return flux;
 }
 
-PixelShaderOutput Water(float2 texCoord: TEXCOORD0) : COLOR
+//=================================================================================
+float4 Water(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float dt = time * 0.001;
 
@@ -106,22 +87,22 @@ PixelShaderOutput Water(float2 texCoord: TEXCOORD0) : COLOR
 	float4 f_right = tex2D(FluxSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)) * flux_scale;
 	float4 f_left = tex2D(FluxSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)) * flux_scale;
 
-	PixelShaderOutput ret = (PixelShaderOutput)0;
+	float4 ret = (float4)0;
 	float flux_in = f_up.a + f_right.r + f_down.g + f_left.b;
 	float flux_out = flux.r + flux.g + flux.b + flux.a;
 
 	float net_volume = (flux_in - flux_out);
-	ret.Water = (water + net_volume) / height_scale - (dt * 0.008);
-	//ret.Water = water;
-	ret.Ground = ground / height_scale;
+	ret = (water + net_volume);// - (dt * 0.008);
 	return ret;
 }
 
+//=================================================================================
 float4 Clear(float2 texCoord: TEXCOORD0) : COLOR
 {
 	return (float4)0;
 }
 
+//=================================================================================
 technique WaterAddCalc
 {
 	pass P0
@@ -134,7 +115,7 @@ technique WaterAddCalc
     }
 }
 
-
+//=================================================================================
 technique FluxCalculation
 {
 	pass P0
@@ -147,9 +128,14 @@ technique FluxCalculation
     }
 }
 
+//=================================================================================
 technique WaterCalculation
 {
 	pass P0
+	{
+		PixelShader = compile ps_2_0 Clear();
+	}
+	pass P1
 	{
 		PixelShader = compile ps_2_0 Water();
 	}

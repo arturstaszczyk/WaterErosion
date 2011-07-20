@@ -1,0 +1,16 @@
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\VTFDisplacement.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\WaterCalc.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\grass.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\height1.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\rock.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\sand.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\snow.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\heightmap2.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\Textures\water.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\Content\MyArial.xnb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\WindowsGame1.exe
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\bin\x86\Release\WindowsGame1.pdb
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\obj\x86\Release\ResolveAssemblyReference.cache
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\obj\x86\Release\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\obj\x86\Release\WindowsGame1.exe
+D:\Dokumenty\uj\!MGR\Applications\Chapter2\WindowsGame1\WindowsGame1\obj\x86\Release\WindowsGame1.pdb

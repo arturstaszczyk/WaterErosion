@@ -110,8 +110,8 @@ VS_OUTPUT Transform(VS_INPUT In)
        
     
     float ground = tex2Dlod_bilinear( displacementSampler, float4(In.uv.xy,0,0)).r;
-	//float water = tex2Dlod_bilinear( waterSampler, float4(In.uv.xy, 0, 0) ).r;
-	float height = saturate(ground);// + water * 0.4);
+	float water = tex2Dlod_bilinear( waterSampler, float4(In.uv.xy, 0, 0) ).r;
+	float height = saturate(ground + water);
 
     In.position.y = (height * maxHeight);
 	//In.position.y = water * maxHeight;
@@ -140,7 +140,7 @@ float4 PixelShader_f(in float4 uv : TEXCOORD0, in float4 weights : TEXCOORD2) : 
 	float4 snow = tex2D(snowSampler,uv*8);
 
 	float4 dbg = tex2D(waterSampler, uv);
-	dbg = saturate(dbg * 100);
+	dbg = saturate((dbg - 0.0005) * 100);
 
 	float4 ret = (sand * weights.x + grass * weights.y + rock * weights.z + snow * weights.w) * 0.8;
 	ret.b += dbg;

@@ -306,7 +306,7 @@ namespace Chapter1
                 frames = 0;
             }
 
-            calculateWater(gameTime.ElapsedGameTime.Milliseconds);
+            calculateWater(gameTime.ElapsedGameTime.Milliseconds * 0.001f);
 
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             //graphics.GraphicsDevice.RenderState.CullMode = CullMode.None;
@@ -337,8 +337,8 @@ namespace Chapter1
                 ss.Filter = TextureFilter.Point;
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
-                sprite.Draw(waterTexture, new Rectangle(0, 0, 240, 240), Color.White);
-                sprite.Draw(fluxTexture, new Rectangle(0, 0, 512, 512), Color.White);
+                //sprite.Draw(waterTexture, new Rectangle(0, 0, 240, 240), Color.White);
+                sprite.Draw(waterTexture, new Rectangle(0, 0, 512, 512), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

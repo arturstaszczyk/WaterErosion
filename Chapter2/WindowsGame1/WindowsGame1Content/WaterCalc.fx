@@ -12,12 +12,10 @@ float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
 
-	float dt = time * 0.001;
-
 	float water = tex2D(WaterSampler, texCoord).r;
 	float water_add = tex2D(WaterSourceSampler, texCoord).r;
 
-	ret.r = min(saturate(water + water_add * dt), 1);
+	ret.r = min(saturate(water + water_add * time * 0.01), 1);
 	return ret;
 }
 
@@ -25,9 +23,6 @@ float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
-
-	// to seconds
-	float dt = time * 0.001;
 
 	float water = tex2D(WaterSampler, texCoord).r;  
 	float ground = tex2D(GroundSampler, texCoord).r;
@@ -59,12 +54,12 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 	delta_height.w = (height - height_around.w);
 
 	float4 flux;
-	flux.x = max(0, prev_flux.x + dt * delta_height.x * 10);
-	flux.y = max(0, prev_flux.y + dt * delta_height.y * 10);
-	flux.z = max(0, prev_flux.z + dt * delta_height.z * 10);
-	flux.w = max(0, prev_flux.w + dt * delta_height.w * 10);
+	flux.x = max(0, prev_flux.x + time * delta_height.x * 20);
+	flux.y = max(0, prev_flux.y + time * delta_height.y * 20);
+	flux.z = max(0, prev_flux.z + time * delta_height.z * 20);
+	flux.w = max(0, prev_flux.w + time * delta_height.w * 20);
 
-	float K = min(1, (water) / ((flux.x + flux.y + flux.z + flux.w)));
+	float K = min(1, (water) / ((flux.x + flux.y + flux.z + flux.w) * time));
 	flux = K * flux;
 
     return flux;
@@ -73,8 +68,6 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
 //=================================================================================
 float4 Water(float2 texCoord: TEXCOORD0) : COLOR
 {
-	float dt = time * 0.001;
-
 	float height_scale = 1;
 	float flux_scale = 1;
 	float water = tex2D(WaterSampler, texCoord).r * height_scale;  
@@ -91,8 +84,9 @@ float4 Water(float2 texCoord: TEXCOORD0) : COLOR
 	float flux_in = f_up.a + f_right.r + f_down.g + f_left.b;
 	float flux_out = flux.r + flux.g + flux.b + flux.a;
 
-	float net_volume = (flux_in - flux_out);
-	ret = (water + net_volume);// - (dt * 0.008);
+	float net_volume = time * (flux_in - flux_out);
+	ret = (water + net_volume);
+	ret.a = 0;
 	return ret;
 }
 

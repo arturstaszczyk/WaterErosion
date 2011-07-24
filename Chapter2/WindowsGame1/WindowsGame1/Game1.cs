@@ -43,6 +43,7 @@ namespace Chapter1
         RenderTarget2D[] water_rt;
         RenderTarget2D[] ground_rt;
         RenderTarget2D[] water_flux_rt;
+        RenderTarget2D[] sediment_rt;
 
         RenderTarget2D added_water_rt;
         RenderTarget2D velocity_rt;
@@ -186,6 +187,12 @@ namespace Chapter1
             water_flux_rt[1] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
+            sediment_rt = new RenderTarget2D[2];
+            sediment_rt[0] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+            sediment_rt[1] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+
             added_water_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             velocity_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
@@ -250,6 +257,7 @@ namespace Chapter1
                 graphics.GraphicsDevice.SamplerStates[1] = ss;
                 graphics.GraphicsDevice.SamplerStates[2] = ss;
                 graphics.GraphicsDevice.SamplerStates[3] = ss;
+                graphics.GraphicsDevice.SamplerStates[4] = ss;
 
                 // PASS 1 - WATER ADD
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["WaterAddCalc"];
@@ -281,6 +289,18 @@ namespace Chapter1
                 graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(added_water_rt, new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
+                sprite.End();
+
+                graphics.GraphicsDevice.SetRenderTarget(null);
+
+                // PASS 4 SEDIMENT DIFFUSE
+                WaterCalc.CurrentTechnique = WaterCalc.Techniques["DiffusionCalculation"];
+                graphics.GraphicsDevice.Textures[4] = velocity_rt;
+
+                graphics.GraphicsDevice.SetRenderTarget(sediment_rt[act_water_rt]);
+                graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
+                sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
+                sprite.Draw(water_rt[1 - act_water_rt], new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
                 sprite.End();
 
                 graphics.GraphicsDevice.SetRenderTarget(null);
@@ -351,8 +371,8 @@ namespace Chapter1
                 ss.Filter = TextureFilter.Point;
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
-                //sprite.Draw(waterTexture, new Rectangle(0, 0, 240, 240), Color.White);
-                sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
+                //sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
+                sprite.Draw(sediment_rt[1- act_water_rt], new Rectangle(0, 0, 512, 512), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

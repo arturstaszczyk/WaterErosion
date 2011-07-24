@@ -6,6 +6,7 @@ sampler WaterSampler : register(s0);
 sampler WaterSourceSampler : register(s1);
 sampler GroundSampler : register(s2);
 sampler FluxSampler : register(s3);
+sampler VelocitySampler : register(s4);
 
 //=================================================================================
 float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
@@ -98,8 +99,34 @@ WaterOutput Water(float2 texCoord: TEXCOORD0) : COLOR
 	float flux_mean_h = (f_left.b - flux.r + flux.b - f_right.r) / 2.0;
 	float flux_mean_v = (f_up.a - flux.g + flux.a - f_down.g) / 2.0;
 
-	ret.Velocity.x = abs(flux_mean_h / water_mean * saturate(water_mean - 0.001));
-	ret.Velocity.y = abs(flux_mean_v / water_mean * saturate(water_mean - 0.001));
+	ret.Velocity.x = (flux_mean_h / water_mean * saturate(water_mean - 0.001));
+	ret.Velocity.y = (flux_mean_v / water_mean * saturate(water_mean - 0.001));
+
+	return ret;
+}
+
+float4 Diffusion(float2 texCoord : TEXCOORD0) : COLOR
+{
+	float K_c = 1;
+
+	float ground = tex2D(GroundSampler, texCoord).r;
+	float g_up = tex2D(GroundSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r;  
+	float g_down = tex2D(GroundSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r;
+	float g_right = tex2D(GroundSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r;
+	float g_left = tex2D(GroundSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r;
+
+	float mean_h = (g_left - ground + ground - g_right) / 2.0;
+	float mean_v = (g_up - ground + ground - g_down) / 2.0;
+
+	float alpha = (mean_v + mean_h) / 2;
+	float C = K_c * length(tex2D(VelocitySampler, texCoord)) * alpha;
+
+	//float sediment = tex2D(SedimentSampler)
+	//if(C > sediment)
+
+	float4 ret = (float4)0;
+	ret = (C) * 50;
+	ret.a = 0.5;
 
 	return ret;
 }
@@ -166,5 +193,14 @@ technique EvaporationCalculation
 	pass P0
 	{
 		PixelShader = compile ps_2_0 Evaporation();
+	}
+}
+
+//=================================================================================
+technique DiffusionCalculation
+{
+	pass P0
+	{
+		PixelShader = compile ps_2_0 Diffusion();
 	}
 }

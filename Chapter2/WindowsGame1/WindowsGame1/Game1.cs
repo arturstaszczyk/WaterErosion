@@ -197,8 +197,8 @@ namespace Chapter1
             {
                 rtb[i] = new RenderTargetBinding[2]
                 {
-                    new RenderTargetBinding(water_rt[i]),
-                    new RenderTargetBinding(ground_rt[i]),
+                    new RenderTargetBinding(water_rt[1 - i]),
+                    new RenderTargetBinding(velocity_rt),
                 };
             }
         }
@@ -273,10 +273,11 @@ namespace Chapter1
                 graphics.GraphicsDevice.SetRenderTarget(null);
                 graphics.GraphicsDevice.Textures[3] = fluxTexture;
 
-                // PASS 3 WATER
+                // PASS 3 WATER + VELOCITY
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["WaterCalculation"];
 
-                graphics.GraphicsDevice.SetRenderTarget(water_rt[1 - act_water_rt]);
+                //graphics.GraphicsDevice.SetRenderTarget(water_rt[1 - act_water_rt]);
+                graphics.GraphicsDevice.SetRenderTargets(rtb[act_water_rt]);
                 graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(added_water_rt, new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
@@ -284,7 +285,7 @@ namespace Chapter1
 
                 graphics.GraphicsDevice.SetRenderTarget(null);
 
-                // PASS 4 WATER EVAP
+                // PASS 5 WATER EVAP
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["EvaporationCalculation"];
 
                 graphics.GraphicsDevice.SetRenderTarget(water_rt[act_water_rt]);
@@ -351,7 +352,7 @@ namespace Chapter1
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
                 //sprite.Draw(waterTexture, new Rectangle(0, 0, 240, 240), Color.White);
-                sprite.Draw(waterTexture, new Rectangle(0, 0, 512, 512), Color.White);
+                sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

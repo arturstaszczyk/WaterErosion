@@ -65,8 +65,14 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
     return flux;
 }
 
+struct WaterOutput
+{
+	float4 Water : COLOR0;
+	float4 Velocity : COLOR1;
+};
+
 //=================================================================================
-float4 Water(float2 texCoord: TEXCOORD0) : COLOR
+WaterOutput Water(float2 texCoord: TEXCOORD0) : COLOR
 {
 	float height_scale = 1;
 	float flux_scale = 1;
@@ -80,13 +86,21 @@ float4 Water(float2 texCoord: TEXCOORD0) : COLOR
 	float4 f_right = tex2D(FluxSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)) * flux_scale;
 	float4 f_left = tex2D(FluxSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)) * flux_scale;
 
-	float4 ret = (float4)0;
+	WaterOutput ret = (WaterOutput)0;
 	float flux_in = f_up.a + f_right.r + f_down.g + f_left.b;
 	float flux_out = flux.r + flux.g + flux.b + flux.a;
 
 	float net_volume = time * (flux_in - flux_out);
-	ret = (water + net_volume);
-	ret.a = 0;
+	ret.Water = (water + net_volume);
+	ret.Water.a = 0;
+
+	float water_mean = (water + ret.Water) / 2.0;
+	float flux_mean_h = (f_left.b - flux.r + flux.b - f_right.r) / 2.0;
+	float flux_mean_v = (f_up.a - flux.g + flux.a - f_down.g) / 2.0;
+
+	ret.Velocity.x = abs(flux_mean_h / water_mean * saturate(water_mean - 0.001));
+	ret.Velocity.y = abs(flux_mean_v / water_mean * saturate(water_mean - 0.001));
+
 	return ret;
 }
 

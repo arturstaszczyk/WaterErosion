@@ -15,7 +15,7 @@ float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
 	float water = tex2D(WaterSampler, texCoord).r;
 	float water_add = tex2D(WaterSourceSampler, texCoord).r;
 
-	ret.r = min(saturate(water + water_add * time * 0.01), 1);
+	ret.r = min(saturate(water + water_add * time * 0.1), 1);
 	return ret;
 }
 
@@ -90,6 +90,17 @@ float4 Water(float2 texCoord: TEXCOORD0) : COLOR
 	return ret;
 }
 
+float4 Evaporation(float2 texCoord : TEXCOORD0) : COLOR
+{
+	float4 ret = (float4)0;
+	float K_e = 0.01;
+
+	float4 water = tex2D(WaterSampler, texCoord);
+	ret = water * (1 - K_e * time);
+
+	return ret;
+}
+
 //=================================================================================
 float4 Clear(float2 texCoord: TEXCOORD0) : COLOR
 {
@@ -132,5 +143,14 @@ technique WaterCalculation
 	pass P1
 	{
 		PixelShader = compile ps_2_0 Water();
+	}
+}
+
+//=================================================================================
+technique EvaporationCalculation
+{
+	pass P0
+	{
+		PixelShader = compile ps_2_0 Evaporation();
 	}
 }

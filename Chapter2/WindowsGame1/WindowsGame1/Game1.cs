@@ -274,9 +274,20 @@ namespace Chapter1
                 // PASS 3 WATER
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["WaterCalculation"];
 
-                graphics.GraphicsDevice.SetRenderTarget(water_rt[act_water_rt]);
+                graphics.GraphicsDevice.SetRenderTarget(water_rt[1 - act_water_rt]);
+                graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(added_water_rt, new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
+                sprite.End();
+
+                graphics.GraphicsDevice.SetRenderTarget(null);
+
+                // PASS 4 WATER EVAP
+                WaterCalc.CurrentTechnique = WaterCalc.Techniques["EvaporationCalculation"];
+
+                graphics.GraphicsDevice.SetRenderTarget(water_rt[act_water_rt]);
+                sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
+                sprite.Draw(water_rt[1 - act_water_rt], new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
                 sprite.End();
 
                 graphics.GraphicsDevice.SetRenderTarget(null);
@@ -306,7 +317,7 @@ namespace Chapter1
                 frames = 0;
             }
 
-            calculateWater(gameTime.ElapsedGameTime.Milliseconds * 0.001f);
+            calculateWater(34 * .001f);//Math.Min(gameTime.ElapsedGameTime.Milliseconds * 0.001f, 34 * 0.001f));
 
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             //graphics.GraphicsDevice.RenderState.CullMode = CullMode.None;

@@ -45,7 +45,7 @@ namespace Chapter1
         RenderTarget2D[] water_flux_rt;
 
         RenderTarget2D added_water_rt;
-        //RenderTarget2D current_flux_rt;
+        RenderTarget2D velocity_rt;
 
         RenderTargetBinding[][] rtb;
 
@@ -182,11 +182,13 @@ namespace Chapter1
 
             water_flux_rt = new RenderTarget2D[2];
             water_flux_rt[0] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
-                false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             water_flux_rt[1] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
-                false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
             added_water_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+            velocity_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
 

@@ -36,6 +36,7 @@ namespace Chapter1
         Texture2D groundTexture;
         Texture2D waterTexture;
         Texture2D waterSourceTexture;
+        Texture2D sedimentTexture;
 
         Texture2D sandTexture, grassTexture, rockTexture, snowTexture;
         
@@ -47,6 +48,7 @@ namespace Chapter1
 
         RenderTarget2D added_water_rt;
         RenderTarget2D velocity_rt;
+        RenderTarget2D debug_rt;
 
         RenderTargetBinding[][] rtb;
 
@@ -61,7 +63,7 @@ namespace Chapter1
             Components.Add(camera);
 
             grid = new Grid(this);
-            grid.CellSize = 4;
+            grid.CellSize = 8;
             grid.Dimension = 256;
             
             Content.RootDirectory = "Content";
@@ -150,10 +152,12 @@ namespace Chapter1
             waterSourceTexture = convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             waterTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             fluxTexture = new Texture2D(graphics.GraphicsDevice, 512, 512, false, SurfaceFormat.Vector4);
+            sedimentTexture = new Texture2D(graphics.GraphicsDevice, 512, 512, false, SurfaceFormat.Vector4);
             Vector4[] newData = new Vector4[fluxTexture.Width * fluxTexture.Height];
             for (int i = 0; i < fluxTexture.Width * fluxTexture.Height; i++)
                 newData[i] = new Vector4(0, 0, 0, 0);
             fluxTexture.SetData<Vector4>(newData);
+            sedimentTexture.SetData<Vector4>(newData);
 
             // VISUAL TEXTURES
             sandTexture = Content.Load<Texture2D>("Textures\\sand");
@@ -196,6 +200,9 @@ namespace Chapter1
             added_water_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             velocity_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+
+            debug_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
 
@@ -258,6 +265,7 @@ namespace Chapter1
                 graphics.GraphicsDevice.SamplerStates[2] = ss;
                 graphics.GraphicsDevice.SamplerStates[3] = ss;
                 graphics.GraphicsDevice.SamplerStates[4] = ss;
+                graphics.GraphicsDevice.SamplerStates[5] = ss;
 
                 // PASS 1 - WATER ADD
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["WaterAddCalc"];
@@ -296,14 +304,22 @@ namespace Chapter1
                 // PASS 4 SEDIMENT DIFFUSE
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["DiffusionCalculation"];
                 graphics.GraphicsDevice.Textures[4] = velocity_rt;
+                graphics.GraphicsDevice.Textures[5] = sedimentTexture;
 
-                graphics.GraphicsDevice.SetRenderTarget(sediment_rt[act_water_rt]);
+                RenderTargetBinding[] rtb_sediment = new RenderTargetBinding[3]
+                {
+                       new RenderTargetBinding(sediment_rt[act_water_rt]),
+                       new RenderTargetBinding(ground_rt[act_water_rt]),
+                       new RenderTargetBinding(debug_rt)
+                };
+
+                graphics.GraphicsDevice.SetRenderTargets(rtb_sediment);
                 graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(water_rt[1 - act_water_rt], new Rectangle(0, 0, water_rt[act_water_rt].Width, water_rt[act_water_rt].Height), Color.White);
                 sprite.End();
 
-                graphics.GraphicsDevice.SetRenderTarget(null);
+                graphics.GraphicsDevice.SetRenderTargets(null);
 
                 // PASS 5 WATER EVAP
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["EvaporationCalculation"];
@@ -316,6 +332,8 @@ namespace Chapter1
                 graphics.GraphicsDevice.SetRenderTarget(null);
 
                 waterTexture = (Texture2D)water_rt[act_water_rt];
+                groundTexture = (Texture2D)ground_rt[act_water_rt];
+                sedimentTexture = (Texture2D)sediment_rt[act_water_rt];
             }
 
             act_water_rt = 1 - act_water_rt;
@@ -349,7 +367,7 @@ namespace Chapter1
             gridEffect.Parameters["world"].SetValue(Matrix.Identity);
             gridEffect.Parameters["view"].SetValue(camera.View);
             gridEffect.Parameters["proj"].SetValue(camera.Projection);
-            gridEffect.Parameters["maxHeight"].SetValue(128);
+            gridEffect.Parameters["maxHeight"].SetValue(256);
             gridEffect.Parameters["displacementMap"].SetValue(groundTexture);
             gridEffect.Parameters["waterMap"].SetValue(waterTexture);
 
@@ -372,7 +390,7 @@ namespace Chapter1
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
                 //sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
-                sprite.Draw(sediment_rt[1- act_water_rt], new Rectangle(0, 0, 512, 512), Color.White);
+                sprite.Draw(debug_rt, new Rectangle(0, 0, 200, 200), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

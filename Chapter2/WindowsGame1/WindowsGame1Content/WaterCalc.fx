@@ -7,6 +7,7 @@ sampler WaterSourceSampler : register(s1);
 sampler GroundSampler : register(s2);
 sampler FluxSampler : register(s3);
 sampler VelocitySampler : register(s4);
+sampler SedimentSampler : register(s5);
 
 //=================================================================================
 float4 WaterAdd(float2 texCoord: TEXCOORD0) : COLOR
@@ -66,6 +67,7 @@ float4 Flux(float2 texCoord: TEXCOORD0) : COLOR
     return flux;
 }
 
+//=================================================================================
 struct WaterOutput
 {
 	float4 Water : COLOR0;
@@ -105,32 +107,63 @@ WaterOutput Water(float2 texCoord: TEXCOORD0) : COLOR
 	return ret;
 }
 
-float4 Diffusion(float2 texCoord : TEXCOORD0) : COLOR
+//=================================================================================
+struct SedimentOutput
 {
-	float K_c = 1;
+	float4 Sediment : COLOR0;
+	float4 Ground : COLOR1;
+	float4 Debug : COLOR2;
+};
 
+//=================================================================================
+SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
+{
+	float K_c = 1.0;
+	float K_s = 1.0;
+
+	float sediment = tex2D(SedimentSampler, texCoord).r;
 	float ground = tex2D(GroundSampler, texCoord).r;
+
 	float g_up = tex2D(GroundSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r;  
 	float g_down = tex2D(GroundSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r;
 	float g_right = tex2D(GroundSampler, float4(texCoord.x + pixel_w, texCoord.y, 0, 0)).r;
 	float g_left = tex2D(GroundSampler, float4(texCoord.x - pixel_w, texCoord.y, 0, 0)).r;
 
-	float mean_h = (g_left - ground + ground - g_right) / 2.0;
-	float mean_v = (g_up - ground + ground - g_down) / 2.0;
+	float mean_h = (g_right - ground + ground - g_left) / 2.0;
+	float mean_v = (g_down - ground + ground - g_up) / 2.0;
 
 	float alpha = (mean_v + mean_h) / 2;
-	float C = K_c * length(tex2D(VelocitySampler, texCoord)) * alpha;
+	float C = abs(K_c * length(tex2D(VelocitySampler, texCoord)) * alpha);
 
-	//float sediment = tex2D(SedimentSampler)
-	//if(C > sediment)
+	SedimentOutput ret = (SedimentOutput)0;
+	
+	if(C - sediment > 0.00001)
+	{
+		ret.Sediment.r = abs(sediment + K_s * (C - sediment));
+		ret.Ground = ground - K_s * (C - sediment);
+		//ret.Debug.r = K_s * (C - sediment) * 2000;
+	}
+	else if(sediment - C > 0.00001)
+	{
+		ret.Sediment.r = abs(sediment - K_s * (sediment - C));
+		ret.Ground = ground + K_s * (sediment - C);
+		//ret.Debug.g = K_s * (sediment - C) * 2000;
+	}
+	else
+	{
+		ret.Sediment.r = sediment;
+		ret.Ground = ground;
+	}
 
-	float4 ret = (float4)0;
-	ret = (C) * 50;
-	ret.a = 0.5;
+	ret.Ground = ground;
+	ret.Debug = ret.Sediment.r * 100;
+	ret.Debug.a = 1;
+	ret.Sediment.a = 1;
 
 	return ret;
 }
 
+//=================================================================================
 float4 Evaporation(float2 texCoord : TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;

@@ -148,7 +148,7 @@ namespace Chapter1
             debugEffect = Content.Load<Effect>("DebugEffect");
 
             // CALC TEXTURES
-            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\heightmap2"));
+            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\height3"));
             waterSourceTexture = convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             waterTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             fluxTexture = new Texture2D(graphics.GraphicsDevice, 512, 512, false, SurfaceFormat.Vector4);
@@ -255,6 +255,8 @@ namespace Chapter1
             {
                 SamplerState ss = new SamplerState();
                 ss.Filter = TextureFilter.Point;
+                ss.AddressU = TextureAddressMode.Clamp;
+                ss.AddressV = TextureAddressMode.Clamp;
 
                 WaterCalc.Parameters["time"].SetValue(dt);
                 graphics.GraphicsDevice.Textures[1] = (waterSourceTexture);
@@ -358,7 +360,7 @@ namespace Chapter1
                 frames = 0;
             }
 
-            calculateWater(34 * .001f);//Math.Min(gameTime.ElapsedGameTime.Milliseconds * 0.001f, 34 * 0.001f));
+            calculateWater(54 * .001f);//Math.Min(gameTime.ElapsedGameTime.Milliseconds * 0.001f, 34 * 0.001f));
 
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             //graphics.GraphicsDevice.RenderState.CullMode = CullMode.None;
@@ -390,7 +392,7 @@ namespace Chapter1
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
                 //sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
-                sprite.Draw(debug_rt, new Rectangle(0, 0, 200, 200), Color.White);
+                sprite.Draw(waterTexture, new Rectangle(0, 0, 200, 200), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

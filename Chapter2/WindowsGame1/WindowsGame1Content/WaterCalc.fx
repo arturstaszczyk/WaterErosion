@@ -118,11 +118,18 @@ struct SedimentOutput
 //=================================================================================
 SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 {
-	float K_c = 1.0;
-	float K_s = 1.0;
+	float K_c = 0.08;
+	float K_s = 0.1;
 
-	float sediment = tex2D(SedimentSampler, texCoord).r;
+	
 	float ground = tex2D(GroundSampler, texCoord).r;
+	float4 velocity = tex2D(VelocitySampler, texCoord);
+
+	float2 sediment_uv = texCoord;
+	sediment_uv.x -= max(pixel_w, pixel_w * (velocity.x * time));
+	sediment_uv.y -= max(pixel_h, pixel_h * (velocity.y * time));
+
+	float sediment = tex2D(SedimentSampler, sediment_uv).r;
 
 	float g_up = tex2D(GroundSampler, float4(texCoord.x, texCoord.y + pixel_h, 0, 0)).r;  
 	float g_down = tex2D(GroundSampler, float4(texCoord.x, texCoord.y - pixel_h, 0, 0)).r;
@@ -133,7 +140,11 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	float mean_v = (g_down - ground + ground - g_up) / 2.0;
 
 	float alpha = (mean_v + mean_h) / 2;
-	float C = abs(K_c * length(tex2D(VelocitySampler, texCoord)) * alpha);
+	alpha = min(alpha, 0.2);
+	alpha = max(alpha, 0.009);
+	float len = length(tex2D(VelocitySampler, texCoord));
+	len = min(len, 1);
+	float C = abs(K_c * len * alpha);
 
 	SedimentOutput ret = (SedimentOutput)0;
 	
@@ -141,13 +152,13 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	{
 		ret.Sediment.r = abs(sediment + K_s * (C - sediment));
 		ret.Ground = ground - K_s * (C - sediment);
-		//ret.Debug.r = K_s * (C - sediment) * 2000;
+		ret.Debug.r = K_s * (C - sediment) * 2000;
 	}
 	else if(sediment - C > 0.00001)
 	{
 		ret.Sediment.r = abs(sediment - K_s * (sediment - C));
 		ret.Ground = ground + K_s * (sediment - C);
-		//ret.Debug.g = K_s * (sediment - C) * 2000;
+		ret.Debug.g = K_s * (sediment - C) * 2000;
 	}
 	else
 	{
@@ -156,7 +167,7 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	}
 
 	ret.Ground = ground;
-	ret.Debug = ret.Sediment.r * 100;
+	//ret.Debug = sediment * 100;
 	ret.Debug.a = 1;
 	ret.Sediment.a = 1;
 
@@ -167,7 +178,7 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 float4 Evaporation(float2 texCoord : TEXCOORD0) : COLOR
 {
 	float4 ret = (float4)0;
-	float K_e = 0.01;
+	float K_e = 0.03;
 
 	float4 water = tex2D(WaterSampler, texCoord);
 	ret = water * (1 - K_e * time);

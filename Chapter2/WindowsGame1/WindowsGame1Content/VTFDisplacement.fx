@@ -111,7 +111,7 @@ VS_OUTPUT Transform(VS_INPUT In)
     
     float ground = tex2Dlod_bilinear( displacementSampler, float4(In.uv.xy,0,0)).r;
 	float water = tex2Dlod_bilinear( waterSampler, float4(In.uv.xy, 0, 0) ).r;
-	float height = saturate(ground + water);
+	float height = saturate(ground);// + water);
 
     In.position.y = (height * maxHeight);
 	//In.position.y = water * maxHeight;

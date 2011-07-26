@@ -49,6 +49,7 @@ namespace Chapter1
         RenderTarget2D added_water_rt;
         RenderTarget2D velocity_rt;
         RenderTarget2D debug_rt;
+        RenderTarget2D debug_rt2;
 
         RenderTargetBinding[][] rtb;
 
@@ -63,7 +64,7 @@ namespace Chapter1
             Components.Add(camera);
 
             grid = new Grid(this);
-            grid.CellSize = 8;
+            grid.CellSize = 4;
             grid.Dimension = 256;
             
             Content.RootDirectory = "Content";
@@ -117,13 +118,12 @@ namespace Chapter1
                 newData = new Vector4[tex.Width * tex.Height];
 
             tex.GetData<Color>(data);
-            float mult = 1.0f / 255.0f;
             for (int i = 0; i < tex.Width * tex.Height; i++)
             {
-                newData[i].X = data[i].R * mult;
-                newData[i].Y = data[i].G * mult;
-                newData[i].Z = data[i].B * mult;
-                newData[i].W = data[i].A * mult;
+                newData[i].X = (float)(data[i].R / 255.0);
+                newData[i].Y = (float)(data[i].G / 255.0);
+                newData[i].Z = (float)(data[i].B / 255.0);
+                newData[i].W = (float)(data[i].A / 255.0);
             }
 
             Texture2D ret = new Texture2D(graphics.GraphicsDevice, tex.Width, tex.Height, false, SurfaceFormat.Vector4);
@@ -148,7 +148,7 @@ namespace Chapter1
             debugEffect = Content.Load<Effect>("DebugEffect");
 
             // CALC TEXTURES
-            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\height3"));
+            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\heightmap2"));
             waterSourceTexture = convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             waterTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             fluxTexture = new Texture2D(graphics.GraphicsDevice, 512, 512, false, SurfaceFormat.Vector4);
@@ -158,6 +158,7 @@ namespace Chapter1
                 newData[i] = new Vector4(0, 0, 0, 0);
             fluxTexture.SetData<Vector4>(newData);
             sedimentTexture.SetData<Vector4>(newData);
+            waterTexture.SetData<Vector4>(newData);
 
             // VISUAL TEXTURES
             sandTexture = Content.Load<Texture2D>("Textures\\sand");
@@ -170,8 +171,6 @@ namespace Chapter1
             font = Content.Load<SpriteFont>("MyArial");
 
             PresentationParameters pp = graphics.GraphicsDevice.PresentationParameters;
-
-                        
 
             water_rt = new RenderTarget2D[2];
             water_rt[0] = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
@@ -203,6 +202,8 @@ namespace Chapter1
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
             debug_rt = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
+                false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+            debug_rt2 = new RenderTarget2D(graphics.GraphicsDevice, 512, 512,
                 false, SurfaceFormat.Vector4, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
 
@@ -255,8 +256,8 @@ namespace Chapter1
             {
                 SamplerState ss = new SamplerState();
                 ss.Filter = TextureFilter.Point;
-                ss.AddressU = TextureAddressMode.Clamp;
-                ss.AddressV = TextureAddressMode.Clamp;
+                ss.AddressU = TextureAddressMode.Mirror;
+                ss.AddressV = TextureAddressMode.Mirror;
 
                 WaterCalc.Parameters["time"].SetValue(dt);
                 graphics.GraphicsDevice.Textures[1] = (waterSourceTexture);
@@ -280,8 +281,15 @@ namespace Chapter1
                 waterTexture = (Texture2D)added_water_rt;
                 
                 // PASS 2 - FLUX
+
+                RenderTargetBinding[] rtb_flux = new RenderTargetBinding[2]
+                {
+                       new RenderTargetBinding(water_flux_rt[act_water_rt]),
+                       new RenderTargetBinding(debug_rt2)
+                };
+
                 WaterCalc.CurrentTechnique = WaterCalc.Techniques["FluxCalculation"];
-                graphics.GraphicsDevice.SetRenderTarget(water_flux_rt[act_water_rt]);
+                graphics.GraphicsDevice.SetRenderTargets(rtb_flux);
                 
                 sprite.Begin(0, BlendState.Opaque, ss, null, null, WaterCalc);
                 sprite.Draw(waterTexture, new Rectangle(0, 0, water_flux_rt[act_water_rt].Width, water_flux_rt[act_water_rt].Height), Color.White);
@@ -392,7 +400,7 @@ namespace Chapter1
 
                 sprite.Begin(0, BlendState.AlphaBlend, ss, null, null);
                 //sprite.Draw(velocity_rt, new Rectangle(0, 0, 512, 512), Color.White);
-                sprite.Draw(waterTexture, new Rectangle(0, 0, 200, 200), Color.White);
+                sprite.Draw(debug_rt, new Rectangle(0, 0, 200, 200), Color.White);
                 sprite.DrawString(font, String.Format("{0}", (int)fps), new Vector2(0, 0), Color.Red);
                 sprite.End();
 

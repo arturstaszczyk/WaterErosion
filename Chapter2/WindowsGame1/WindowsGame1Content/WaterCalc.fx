@@ -172,8 +172,8 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	float4 velocity = tex2D(VelocitySampler, texCoord);
 
 	float2 sediment_uv = texCoord;
-	sediment_uv.x +=(pixel_w * (velocity.x * time));
-	sediment_uv.y +=( pixel_h * (velocity.y * time));
+	sediment_uv.x +=(pixel_w * (velocity.x * 5));
+	sediment_uv.y +=( pixel_h * (velocity.y * 5));
 
 	float sediment = tex2D(SedimentSampler, sediment_uv).r;
 
@@ -199,7 +199,7 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	{
 		ret.Sediment.r = abs(sediment + K_s * (C - sediment));
 		ret.Ground = ground - K_s * (C - sediment);
-		//ret.Debug.r = K_s * (C - sediment) * 20000;
+		ret.Debug.r = K_s * (C - sediment) * 20000;
 	}
 	else if(sediment - C > 0.00001)
 	{
@@ -214,7 +214,7 @@ SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 	}
 
 	//ret.Ground = ground;
-	//ret.Debug = abs(C - ret.Sediment) * 1000;
+	//ret.Debug = (-pixel_h + (pixel_h * (velocity.y * 5))) * 50;
 	ret.Debug.a = 1;
 	ret.Sediment.a = 1;
 

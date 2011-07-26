@@ -148,7 +148,7 @@ namespace Chapter1
             debugEffect = Content.Load<Effect>("DebugEffect");
 
             // CALC TEXTURES
-            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\heightmap2"));
+            groundTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\height3"));
             waterSourceTexture = convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             waterTexture= convertToVec4Texture(Content.Load<Texture2D>("Textures\\water"));
             fluxTexture = new Texture2D(graphics.GraphicsDevice, 512, 512, false, SurfaceFormat.Vector4);
@@ -241,6 +241,17 @@ namespace Chapter1
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                Vector4[] newData = new Vector4[waterSourceTexture.Width * waterSourceTexture.Height];
+                for (int i = 0; i < fluxTexture.Width * fluxTexture.Height; i++)
+                    newData[i] = new Vector4(0, 0, 0, 0);
+
+                waterSourceTexture.SetData<Vector4>(newData);
+            }
+
+
 
             // TODO: Add your update logic here
 

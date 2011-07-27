@@ -164,7 +164,7 @@ struct SedimentOutput
 //=================================================================================
 SedimentOutput Diffusion(float2 texCoord : TEXCOORD0) : COLOR
 {
-	float K_c = 0.08;
+	float K_c = 0.02;
 	float K_s = 0.002;
 
 	
